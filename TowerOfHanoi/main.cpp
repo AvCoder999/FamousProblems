@@ -25,7 +25,7 @@ main()
 void
 hanoy(const int count, char first, char second, char third)
 {
-    if (count % 2 == 0) {
+    if (0 == count % 2) {
         char temp = second;
         second = third;
         third = temp;
