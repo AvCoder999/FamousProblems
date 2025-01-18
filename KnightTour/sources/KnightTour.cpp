@@ -1,4 +1,5 @@
 #include "headers/KnightTour.hpp"
+#include <cassert>
 
 const int KnightTour::moveX[KnightTour::MOVE_COUNT] = { 2, 1, -1, -2, -2, -1, 1, 2 };
 const int KnightTour::moveY[KnightTour::MOVE_COUNT] = { 1, 2, 2, 1, -1, -2, -2, -1 };
@@ -35,9 +36,11 @@ operator<<(std::ostream& out, const Knight& knight)
 }
 
 KnightTour::KnightTour(const int row, const int col)
-    : knight_(row, col)
+    : knight_(std::abs(row) % SIZE, std::abs(col) % SIZE)
     , board_()
-{}
+{
+    assert(isSafe(row, col));
+}
 
 int
 KnightTour::run(const Approach& version)
