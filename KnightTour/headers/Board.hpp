@@ -13,6 +13,7 @@ class Board : public std::vector<std::vector<int>>
     friend std::ostream& operator<<(std::ostream& out, const Board& board);
 public:
     Board(const int size);
+    void reset();
 };
 
 #endif /// __BOARD_HPP__

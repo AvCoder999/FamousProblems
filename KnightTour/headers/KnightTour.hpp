@@ -24,8 +24,7 @@ public:
     int run();
 private:
     bool isSafe(const int row, const int col);
-    bool brute_force(const int counter);
-    bool solveTour(int x, int y, int moveCount);
+    bool brute_force(const int x, const int y, const int moveCount);
 private:
     Board board_;
     Knight knight_;

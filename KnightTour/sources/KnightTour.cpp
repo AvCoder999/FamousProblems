@@ -1,7 +1,10 @@
 #include "headers/KnightTour.hpp"
 
-int KnightTour::moveX[KnightTour::MOVE_COUNT] = {-2, -2, -1, -1, 1, 1, 2, 2 };
-int KnightTour::moveY[KnightTour::MOVE_COUNT] = {-1, 1, -2, 2, -2, 2, -1, 1 };
+/// int KnightTour::moveX[KnightTour::MOVE_COUNT] = {-2, -2, -1, -1, 1, 1, 2, 2 };
+/// int KnightTour::moveY[KnightTour::MOVE_COUNT] = {-1, 1, -2, 2, -2, 2, -1, 1 };
+
+int KnightTour::moveX[KnightTour::MOVE_COUNT] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+int KnightTour::moveY[KnightTour::MOVE_COUNT] = { 1, 2, 2, 1, -1, -2, -2, -1 };
 
 KnightTour::KnightTour(const int boardSize, const int row, const int col)
     : board_(boardSize)
@@ -20,64 +23,39 @@ KnightTour::isSafe(const int row, const int col)
 {
     return (row >= 0 && row < static_cast<int>(board_.size()) && 
             col >= 0 && col < static_cast<int>(board_.size()) &&
-            0 == board_[row][col]);
+            -1 == board_[row][col]);
 }
 
 int
 KnightTour::run()
 {
-    /// board_[knight_.first][knight_.second] = 1;
-    /// return !static_cast<int>(brute_force(1));
-    
-    std::cout << knight_ << std::endl;
-    board_[knight_.first][knight_.second] = 1;
-    solveTour(knight_.first, knight_.second, 2);
+    board_[knight_.first][knight_.second] = 0;
+    brute_force(knight_.first, knight_.second, 1);
     std::cout << board_ << std::endl;
+    board_.reset();
     return 0;
 }
 
 bool 
-KnightTour::solveTour(int x, int y, int moveCount)
-{
-    if (moveCount == 64) {
-        return true;  // All squares are visited
-    }
-
-    // Try all next moves
-    for (int i = 0; i < 8; i++) {
-        int nextX = x + moveX[i];
-        int nextY = y + moveY[i];
-
-        if (isSafe(nextX, nextY)) {
-            board_[nextX][nextY] = moveCount;  // Make the move
-            if (solveTour(nextX, nextY, moveCount + 1)) {
-                return true;
-            }
-            board_[nextX][nextY] = 0;  // Backtrack
-        }
-    }
-    return false;  // No solution found
-}
-
-bool
-KnightTour::brute_force(const int counter)
+KnightTour::brute_force(const int x, const int y, const int counter)
 {
     /// std::cout << board_ << std::endl;
-    if (64 == counter) {return true; }
-    for (int i = 0; i < MOVE_COUNT; ++i) {
-        const int newRow = knight_.first + moveX[i];
-        const int newCol = knight_.second + moveY[i];
-        if (isSafe(newRow, newCol)) {
-            board_[newRow][newCol] = counter; 
-            knight_.first = newRow;
-            knight_.second = newCol;
-            if (brute_force(counter + 1)) {
+    if (counter == static_cast<int>(board_.size() * board_.size())) {
+        return true;
+    }
+
+    for (int i = 0; i < 8; i++) {
+        const int nextX = x + moveX[i];
+        const int nextY = y + moveY[i];
+
+        if (isSafe(nextX, nextY)) {
+            board_[nextX][nextY] = counter; 
+            if (brute_force(nextX, nextY, counter + 1)) {
                 return true;
             }
-            board_[newRow][newCol] = 0;
-            /// dzin het ber vor backtrackingy apah0ovvi
+            board_[nextX][nextY] = -1;
         }
     }
-    return false;
+    return false; 
 }
 
